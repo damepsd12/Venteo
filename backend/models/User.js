@@ -1,33 +1,32 @@
-// 📁 backend/models/User.js
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-const sellerSchema = new mongoose.Schema({
-  fullName: String,
+// Sous-schéma pour les informations du vendeur
+const sellerInfoSchema = new mongoose.Schema({
   phone: String,
   address: String,
   username: String,
   companyName: String,
-  companyRegNumber: String,
-  companyType: String,
-  companyWebsite: String,
+  businessRegNumber: String,
+  businessType: String,
+  website: String,
   bankDetails: String,
   paymentMethod: String,
   productCategories: String,
   productDescription: String,
-  identityDocument: String,
-  businessCertificate: String,
   returnPolicy: String,
   shippingInfo: String,
-});
+}, { _id: false });
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  email: { type: String, unique: true },
-  password: String,
-  role: { type: String, enum: ["buyer", "seller", "admin"], default: "buyer" },
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true, lowercase: true, },
+  password: { type: String, required: true },
   isSeller: { type: Boolean, default: false },
-  pending: { type: Boolean, default: false },
-  sellerInfo: sellerSchema,
+  termsAccepted: { type: Boolean, required: true },
+  pending: { type: Boolean, default: true },  // Nouveau champ pour savoir si le vendeur est en attente d'approbation
+  sellerInfo: sellerInfoSchema,
+  role: { type: String, enum: ['admin', 'seller', 'buyer'], default: 'buyer' },
+  createdAt: { type: Date, default: Date.now },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model('User', userSchema);
