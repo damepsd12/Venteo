@@ -13,7 +13,7 @@ export default function DashboardLayout({ children, role }: DashboardLayoutProps
       <div className="flex min-h-screen">
         {role === 'admin' && <AdminSidebar />}
         {role === 'seller' && <SellerSidebar />}
-        <main className="flex-1 p-8 bg-gray-200">{children}</main>
+        <main className="flex-1 p-9 bg-gray-200">{children}</main>
       </div>
     </div>
   );

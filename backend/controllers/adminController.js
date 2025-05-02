@@ -1,5 +1,15 @@
 const User = require('../models/User');
 
+const getPendingSellers = async (req, res) => {
+  try {
+    const sellers = await User.find({ isSeller: true, pending: true }).select("-password");
+    res.status(200).json(sellers);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Erreur lors de la récupération des vendeurs en attente." });
+  }
+};
+
 // Fonction pour approuver un vendeur
 const approveSeller = async (req, res) => {
   const { userId } = req.params;
@@ -46,14 +56,5 @@ const rejectSeller = async (req, res) => {
   }
 };
 
-const getPendingSellers = async (req, res) => {
-    try {
-      const sellers = await User.find({ isSeller: true, pending: true }).select("-password");
-      res.status(200).json(sellers);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Erreur lors de la récupération des vendeurs en attente." });
-    }
-  };
-  
+
 module.exports = { getPendingSellers, approveSeller, rejectSeller };

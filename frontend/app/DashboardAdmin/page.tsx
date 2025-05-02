@@ -12,6 +12,21 @@ export default function DashboardAdmin() {
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   useEffect(() => {
+    // const fetchSellers = async () => {
+    //   try {
+    //     const res = await fetch("http://localhost:5000/api/admin/pending-sellers", {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
+    //     const data = await res.json();
+    //     setSellers(data);
+    //   } catch (err) {
+    //     alert("Erreur lors du chargement des vendeurs.");
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
     const fetchSellers = async () => {
       try {
         const res = await fetch("http://localhost:5000/api/admin/pending-sellers", {
@@ -19,15 +34,21 @@ export default function DashboardAdmin() {
             Authorization: `Bearer ${token}`,
           },
         });
+    
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || "Erreur inconnue");
+        }
+    
         const data = await res.json();
         setSellers(data);
-      } catch (err) {
-        alert("Erreur lors du chargement des vendeurs.");
+      } catch (err: any) {
+        alert("Erreur : " + err.message);
       } finally {
         setLoading(false);
       }
     };
-
+    
     fetchSellers();
   }, []);
 
@@ -38,15 +59,16 @@ export default function DashboardAdmin() {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    
     const data = await res.json();
+    
     alert(data.message);
     setSellers((prev) => prev.filter((u) => u._id !== userId));
   };
 
   return (
     <DashboardLayout role="admin">
-    <div className="p-6">
+    <div className="pl-59 p-15">
       <h1 className="text-2xl font-bold mb-4">Vendeurs en attente</h1>
 
       {loading ? (
