@@ -26,6 +26,7 @@ export default function SellerSidebar() {
 
   const links = [
     { href: '/DashboardSeller', label: '🏠 Accueil' },
+    { href: '/DashboardSeller/my-products', label: '🏠 Mes produits' },
   ];
 
   return (

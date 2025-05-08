@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
 
-const verifyAdmin = (req, res, next) => {
+exports.verifyAdmin = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   if (!authHeader?.startsWith("Bearer ")) {
     return res.status(401).json({ message: "Token manquant" });
@@ -13,11 +13,10 @@ const verifyAdmin = (req, res, next) => {
     if (decoded.role !== "admin") {
       return res.status(403).json({ message: "Accès réservé aux administrateurs." });
     }
+
     req.user = decoded;
     next();
   } catch (err) {
     return res.status(401).json({ message: "Token invalide" });
   }
 };
-
-module.exports = verifyAdmin;

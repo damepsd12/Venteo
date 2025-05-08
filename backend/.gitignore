@@ -1,0 +1,7 @@
+# Ignorer le dossier node_modules
+node_modules/
+
+# Ignorer d'autres dossiers ou fichiers spécifiques si nécessaire
+dist/
+build/
+.env # Si vous utilisez un fichier d'environnement local

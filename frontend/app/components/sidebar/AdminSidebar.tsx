@@ -26,8 +26,8 @@ export default function AdminSidebar() {
 
   const links = [
     { href: '/DashboardAdmin', label: '🏠 Accueil' },
-    // { href: '/DashboardAdmin/approvideseller', label: '✅ Valider Vendeurs' },
     { href: '/DashboardAdmin/pending-products', label: '👥 Produits en attente' },
+    { href: '/DashboardAdmin/approvalproduct', label: '✅ Produits Valider' },
     { href: '/DashboardAdmin/users', label: '👥 Utilisateurs' },
   ];
 

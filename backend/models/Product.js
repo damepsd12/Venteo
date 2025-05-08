@@ -7,6 +7,9 @@ const productSchema = new mongoose.Schema({
   image: String,
   category: String,
   status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  rejectionReason: { // Optionnel: pour stocker la raison du refus
+    type: String,
+ },
   seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
 })
 

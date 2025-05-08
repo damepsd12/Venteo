@@ -12,21 +12,6 @@ export default function DashboardAdmin() {
   const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
 
   useEffect(() => {
-    // const fetchSellers = async () => {
-    //   try {
-    //     const res = await fetch("http://localhost:5000/api/admin/pending-sellers", {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     });
-    //     const data = await res.json();
-    //     setSellers(data);
-    //   } catch (err) {
-    //     alert("Erreur lors du chargement des vendeurs.");
-    //   } finally {
-    //     setLoading(false);
-    //   }
-    // };
     const fetchSellers = async () => {
       try {
         const res = await fetch("http://localhost:5000/api/admin/pending-sellers", {

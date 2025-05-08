@@ -1,13 +1,36 @@
-const express = require('express')
-const router = express.Router()
-const { createProduct, validateProduct } = require('../controllers/productController')
-const { protect } = require('../middleware/authMiddleware')
-const { requireRole, requireApprovedSeller } = require('../middleware/roleMiddleware')
+const express = require('express');
+const router = express.Router();
+const upload = require('../middleware/upload'); // votre middleware Multer
 
-// Vendeur (approuvé)
-router.post('/products', protect, requireApprovedSeller, createProduct)
+// Contrôleurs
+const {
+  getApprovedProducts,
+  getProductById,
+  createProduct,
+  deleteProduct,
+  validateProduct,
+  getSellerProducts,
+  getPendingProducts, // Utilisé ici pour la route admin
+} = require('../controllers/productController');
 
-// Admin
-router.put('/products/:id/validate', protect, requireRole('admin'), validateProduct)
+// Middlewares
+const { protect, requireRole, requireApprovedSeller } = require('../middleware/verifyToken');
+const { verifyAdmin } = require('../middleware/verifyAdmin');
 
-module.exports = router
+// Routes vendeur
+router.get('/my-products', protect, requireRole('seller'), requireApprovedSeller, getSellerProducts);
+router.post('/', protect, requireRole('seller'), requireApprovedSeller,upload.single('image'), createProduct); // Note: Cette route POST / peut coexister avec GET / si l'ordre est bon
+
+// Routes administrateur
+// Utilisez cette route unique pour les produits en attente
+router.get('/admin/pending-products', protect, verifyAdmin, getPendingProducts);
+router.get('/admin/approved-products', protect, verifyAdmin, getApprovedProducts); // Route pour admin (produits approuvés)
+router.patch('/:id/validate', protect, verifyAdmin, validateProduct);
+router.delete('/:id', protect, verifyAdmin, deleteProduct);
+
+// Routes publiques (Déplacées ici pour s'assurer que les routes spécifiques sont trouvées en premier)
+router.get('/', getApprovedProducts);  // Liste des produits validés
+router.get('/:id', getProductById);  // Détails d'un produit
+
+
+module.exports = router;
