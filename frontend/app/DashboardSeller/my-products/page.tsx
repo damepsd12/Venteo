@@ -220,7 +220,7 @@ export default function MyProductsPage() {
                 <h2 className="text-xl font-semibold mb-2">{product.title}</h2>
                 <p className="text-gray-700 text-sm flex-grow">{product.description}</p>
                 <p className="text-base font-bold mt-3">
-                  💰 {typeof product.price === 'number' ? formatPrice(product.price, 'FCFA') : 'Prix non disponible'}
+                  💰 {typeof product.price === 'number' ? formatPrice(product.price, 'XOF') : 'Prix non disponible'}
                 </p>
                 <p className="text-sm mt-2">
                   Statut: <span className={`${getStatusColor(product.status)} font-semibold capitalize`}>{product.status}</span>

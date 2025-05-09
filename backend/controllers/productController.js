@@ -27,6 +27,8 @@ exports.createProduct = async (req, res) => {
       image: result.secure_url, // URL de l’image uploadée
       cloudinary_public_id: result.public_id, // pour suppression ou autres opérations futures
       seller: req.user._id, // ID du vendeur connecté
+      approved: false,       // ➕ ajouté
+      status: 'pending',
     });
 
     res.status(201).json(newProduct);
@@ -51,13 +53,60 @@ exports.getApprovedProducts = async (req, res) => {
 
   const products = await Product.find(filters).populate('seller', 'name');
   res.json(products);
+
+
 };
+// Produits validés (pour la page d'accueil)
+// exports.getApprovedProducts = async (req, res) => {
+//   try {
+//     const { category, search } = req.query;
+
+//     const filters = { approved: true };
+//     if (category) filters.category = category;
+//     if (search) filters.title = new RegExp(search, 'i');
+
+//     const products = await Product.find(filters).populate('seller', 'name');
+//     res.json(products);
+//   } catch (err) {
+//     console.error('Erreur dans getApprovedProducts:', err);
+//     res.status(500).json({ message: 'Erreur serveur', error: err.message });
+//   }
+// };
+
+//  Récupérer les produits approuvés
+// exports.getApprovedProducts = async (req, res) => {
+//   try {
+//     const products = await Product.find({ approved: true }).populate('seller', 'name');
+//     res.json(products);
+//   } catch (err) {
+//     console.error('Erreur dans getApprovedProducts:', err);
+//     res.status(500).json({ message: 'Erreur serveur', error: err.message });
+//   }
+// };
 
 // Fiche produit
 exports.getProductById = async (req, res) => {
-  const product = await Product.findById(req.params.id).populate('seller', 'name');
-  if (!product || !product.approved) return res.status(404).json({ message: 'Produit introuvable' });
-  res.json(product);
+  try {
+    const productId = req.params.id;
+
+    // Vérification que l'ID est valide (24 caractères hexadécimaux)
+    if (!/^[0-9a-fA-F]{24}$/.test(productId)) {
+      return res.status(400).json({ message: 'ID du produit invalide' });
+    }
+
+    // Recherche du produit par ID
+    const product = await Product.findById(productId).populate('seller', 'name');
+
+    if (!product || !product.approved) {
+      return res.status(404).json({ message: 'Produit introuvable ou non approuvé' });
+    }
+
+    res.json(product);
+    console.log('Produit approuvé trouvé :', product);
+  } catch (err) {
+    console.error('Erreur dans getProductById:', err);
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
 };
 
 // Liste des produits en attente (admin)
@@ -74,15 +123,22 @@ exports.getPendingProducts = async (req, res) => {
 exports.validateProduct = async (req, res) => {
   const { action } = req.body;
   const product = await Product.findById(req.params.id);
-
   if (!product) return res.status(404).json({ message: 'Produit introuvable' });
 
-  if (action === 'approve') product.approved = true;
-  else if (action === 'reject') product.approved = false;
-  else return res.status(400).json({ message: 'Action invalide' });
+  if (action === 'approve') {
+    product.approved = true;
+    product.status = 'approved';
+  } else if (action === 'reject') {
+    product.approved = false;
+    product.status = 'rejected';
+  } else {
+    return res.status(400).json({ message: 'Action invalide' });
+  }
 
   await product.save();
-  res.json({ message: `Produit ${action}é` });
+  res.json({ message: `Produit ${action}é avec succès.` });
+  console.log('Produit après modification :', product);
+
 };
 
 // Supprimer un produit (admin)

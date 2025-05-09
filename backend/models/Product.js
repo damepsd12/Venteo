@@ -10,7 +10,9 @@ const productSchema = new mongoose.Schema({
   rejectionReason: { // Optionnel: pour stocker la raison du refus
     type: String,
  },
-  seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' }
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  // Ajoutez ce champ :
+  approved: { type: Boolean, default: false }
 })
 
 module.exports = mongoose.model('Product', productSchema)

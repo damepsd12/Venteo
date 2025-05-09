@@ -146,7 +146,7 @@ const PendingProductsPage = () => {
                                         </td>
                                         <td className="p-2 border">{product.title}</td>
                                         <td className="p-2 border">{product.description.substring(0, 100)}...</td>
-                                        <td className="p-2 border">{product.price} €</td>
+                                        <td className="p-2 border">{product.price} F CFA</td>
                                         <td className="p-2 border">{product.category}</td>
                                         {/* Assurez-vous que product.seller est bien peuplé et a un champ 'name' */}
                                         <td className="p-2 border">{product.seller?.name || 'N/A'}</td>
