@@ -5,3 +5,7 @@ node_modules/
 dist/
 build/
 .env # Si vous utilisez un fichier d'environnement local
+
+update-role
+
+create-admin

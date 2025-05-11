@@ -56,33 +56,6 @@ exports.getApprovedProducts = async (req, res) => {
 
 
 };
-// Produits validés (pour la page d'accueil)
-// exports.getApprovedProducts = async (req, res) => {
-//   try {
-//     const { category, search } = req.query;
-
-//     const filters = { approved: true };
-//     if (category) filters.category = category;
-//     if (search) filters.title = new RegExp(search, 'i');
-
-//     const products = await Product.find(filters).populate('seller', 'name');
-//     res.json(products);
-//   } catch (err) {
-//     console.error('Erreur dans getApprovedProducts:', err);
-//     res.status(500).json({ message: 'Erreur serveur', error: err.message });
-//   }
-// };
-
-//  Récupérer les produits approuvés
-// exports.getApprovedProducts = async (req, res) => {
-//   try {
-//     const products = await Product.find({ approved: true }).populate('seller', 'name');
-//     res.json(products);
-//   } catch (err) {
-//     console.error('Erreur dans getApprovedProducts:', err);
-//     res.status(500).json({ message: 'Erreur serveur', error: err.message });
-//   }
-// };
 
 // Fiche produit
 exports.getProductById = async (req, res) => {
@@ -143,11 +116,50 @@ exports.validateProduct = async (req, res) => {
 
 // Supprimer un produit (admin)
 exports.deleteProduct = async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  if (!product) return res.status(404).json({ message: 'Produit introuvable' });
-
-  await cloudinary.uploader.destroy(product.cloudinary_public_id);
-  await product.deleteOne();
-
-  res.json({ message: 'Produit supprimé' });
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: 'Produit introuvable' });
+    }
+    if (product.cloudinary_public_id) {
+      await cloudinary.uploader.destroy(product.cloudinary_public_id);
+    }
+    await product.deleteOne();
+    res.json({ message: 'Produit supprimé' });
+  } catch (err) {
+    console.error('Erreur lors de la suppression:', err);
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
 };
+
+// Modifier un produit (pour le vendeur)
+exports.updateProduct = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const product = await Product.findById(id);
+
+  if (!product || !product.seller.equals(req.user._id)) {
+    return res.status(403).json({ message: 'Accès refusé' });
+  }
+
+  const { title, description, price, category, stock } = req.body;
+
+  if (title) product.title = title;
+  if (description) product.description = description;
+  if (price !== undefined) product.price = price;
+  if (category) product.category = category;
+  if (stock !== undefined) product.stock = stock;
+
+  // Si nouvelle image
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    if (product.cloudinary_public_id) {
+      await cloudinary.uploader.destroy(product.cloudinary_public_id);
+    }
+    product.image = result.secure_url;
+    product.cloudinary_public_id = result.public_id;
+    fs.unlinkSync(req.file.path);
+  }
+
+  await product.save();
+  res.json(product);
+});

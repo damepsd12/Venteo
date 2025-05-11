@@ -12,7 +12,8 @@ const productSchema = new mongoose.Schema({
  },
   seller: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   // Ajoutez ce champ :
-  approved: { type: Boolean, default: false }
+  approved: { type: Boolean, default: false },
+  stock: { type: Number, default: 0 }
 })
 
 module.exports = mongoose.model('Product', productSchema)

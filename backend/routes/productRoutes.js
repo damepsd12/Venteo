@@ -8,6 +8,7 @@ const {
   getProductById,
   createProduct,
   deleteProduct,
+  updateProduct,
   validateProduct,
   getSellerProducts,
   getPendingProducts, // Utilisé ici pour la route admin
@@ -20,6 +21,9 @@ const { verifyAdmin } = require('../middleware/verifyAdmin');
 // Routes vendeur
 router.get('/my-products', protect, requireRole('seller'), requireApprovedSeller, getSellerProducts);
 router.post('/', protect, requireRole('seller'), requireApprovedSeller,upload.single('image'), createProduct); // Note: Cette route POST / peut coexister avec GET / si l'ordre est bon
+router.delete('/:id', protect, requireRole('seller'), deleteProduct);
+//router.put('/:id', protect, requireRole('seller'), upload.single('image'), updateProduct);
+router.put('/:id', protect, requireRole('seller'), upload.single('image'), updateProduct);
 
 // Routes administrateur
 // Utilisez cette route unique pour les produits en attente

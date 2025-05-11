@@ -1,134 +1,241 @@
-'use client';
 
-import React, { useState } from 'react';
+// import React from 'react';
 
-interface AddProductModalProps {
+// interface Props {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   onSubmit: (formData: FormData) => void;
+// }
+
+// const AddProductModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
+//   const [title, setTitle] = React.useState('');
+//   const [description, setDescription] = React.useState('');
+//   const [price, setPrice] = React.useState('');
+//   const [category, setCategory] = React.useState('');
+//   const [stock, setStock] = React.useState('');
+//   const [imageFile, setImageFile] = React.useState<File | null>(null);
+
+//   const handleSubmit = (e: React.FormEvent) => {
+//     e.preventDefault();
+//     const formData = new FormData();
+//     formData.append('title', title);
+//     formData.append('description', description);
+//     formData.append('price', price);
+//     formData.append('category', category);
+//     formData.append('stock', stock);
+//     if (imageFile) {
+//       formData.append('image', imageFile);
+//     }
+//     onSubmit(formData);
+//   };
+
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+//       <div className="bg-white p-4 rounded-lg max-w-xl w-full relative overflow-y-auto max-h-full">
+//         <button className="absolute top-2 right-2 text-red-600 font-bold" onClick={onClose}>Fermer</button>
+//         <h2 className="text-xl mb-4">Ajouter un produit</h2>
+//         <form onSubmit={handleSubmit}>
+//           {/* Champs du formulaire */}
+//           <div className="mb-2">
+//             <label className="block mb-1">Titre</label>
+//             <input
+//               type="text"
+//               value={title}
+//               onChange={(e) => setTitle(e.target.value)}
+//               className="w-full border p-2"
+//               required
+//             />
+//           </div>
+//           <div className="mb-2">
+//             <label className="block mb-1">Description</label>
+//             <textarea
+//               value={description}
+//               onChange={(e) => setDescription(e.target.value)}
+//               className="w-full border p-2"
+//               required
+//             />
+//           </div>
+//           <div className="mb-2">
+//             <label className="block mb-1">Prix</label>
+//             <input
+//               type="number"
+//               value={price}
+//               onChange={(e) => setPrice(e.target.value)}
+//               className="w-full border p-2"
+//               required
+//             />
+//           </div>
+//           <div className="mb-2">
+//             <label className="block mb-1">Catégorie</label>
+//             <input
+//               type="text"
+//               value={category}
+//               onChange={(e) => setCategory(e.target.value)}
+//               className="w-full border p-2"
+//               required
+//             />
+//           </div>
+//           <div className="mb-2">
+//             <label className="block mb-1">Stock</label>
+//             <input
+//               type="number"
+//               value={stock}
+//               onChange={(e) => setStock(e.target.value)}
+//               className="w-full border p-2"
+//             />
+//           </div>
+//           <div className="mb-2">
+//             <label className="block mb-1">Image</label>
+//             <input
+//               type="file"
+//               accept="image/*"
+//               onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+//               className="w-full"
+//             />
+//           </div>
+//           <button
+//             type="submit"
+//             className="mt-2 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
+//           >
+//             Publier
+//           </button>
+//         </form>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AddProductModal;
+
+import React from 'react';
+
+interface Props {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (formData: FormData) => Promise<void>;
+  onSubmit: (formData: FormData) => void;
 }
 
-interface NewProductState {
-  title: string;
-  description: string;
-  price: string;
-  image: File | null;
-  category: string;
-}
+const AddProductModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
+  const [title, setTitle] = React.useState('');
+  const [description, setDescription] = React.useState('');
+  const [price, setPrice] = React.useState('');
+  const [category, setCategory] = React.useState('');
+  const [stock, setStock] = React.useState('');
+  const [imageFile, setImageFile] = React.useState<File | null>(null);
 
-export default function AddProductModal({ isOpen, onClose, onSubmit }: AddProductModalProps) {
-  const [newProduct, setNewProduct] = useState<NewProductState>({
-    title: '',
-    description: '',
-    price: '',
-    image: null,
-    category: '',
-  });
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = e.target.files?.[0] || null;
-    setNewProduct((prevState) => ({ ...prevState, image: selectedFile }));
+  const resetForm = () => {
+    setTitle('');
+    setDescription('');
+    setPrice('');
+    setCategory('');
+    setStock('');
+    setImageFile(null);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!newProduct.image) {
-      alert("Veuillez sélectionner une image pour le produit.");
-      return;
-    }
-
     const formData = new FormData();
-    formData.append('title', newProduct.title);
-    formData.append('description', newProduct.description);
-    formData.append('price', newProduct.price);
-    formData.append('category', newProduct.category);
-    formData.append('image', newProduct.image);
-
-    await onSubmit(formData);
-
-    // Reset le formulaire après soumission
-    setNewProduct({
-      title: '',
-      description: '',
-      price: '',
-      image: null,
-      category: '',
-    });
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('price', price);
+    formData.append('category', category);
+    formData.append('stock', stock);
+    if (imageFile) {
+      formData.append('image', imageFile);
+    }
+    onSubmit(formData);
+    resetForm(); // vide le formulaire après soumission
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center z-50">
-      <div className="relative p-5 border w-96 shadow-lg rounded-md bg-white">
-        <h2 className="text-2xl font-bold mb-4">Ajouter un nouveau produit</h2>
-        <form onSubmit={handleSubmit} className="grid gap-4">
-          <input
-            type="text"
-            placeholder="Titre"
-            className="p-2 border rounded"
-            value={newProduct.title}
-            onChange={(e) => setNewProduct({ ...newProduct, title: e.target.value })}
-            required
-          />
-          <textarea
-            placeholder="Description"
-            className="p-2 border rounded"
-            value={newProduct.description}
-            onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-            required
-          />
-          <input
-            type="number"
-            placeholder="Prix"
-            className="p-2 border rounded"
-            value={newProduct.price}
-            onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-            required
-          />
-          <input
-            type="file"
-            accept="image/*"
-            className="p-2 border rounded"
-            onChange={handleFileChange}
-            required
-          />
-          {/* Aperçu de l'image sélectionnée */}
-          {newProduct.image && (
-            <img
-              src={URL.createObjectURL(newProduct.image)}
-              alt="Aperçu"
-              className="w-32 h-32 object-cover rounded"
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white p-4 rounded-lg max-w-xl w-full relative overflow-y-auto max-h-full">
+        <button className="absolute top-2 right-2 text-red-600 font-bold" onClick={onClose}>Fermer</button>
+        <h2 className="text-xl mb-4">Ajouter un produit</h2>
+        <form onSubmit={handleSubmit}>
+          {/* Titre */}
+          <div className="mb-2">
+            <label className="block mb-1">Titre</label>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              className="w-full border p-2"
+              required
             />
-          )}
-          <select
-            value={newProduct.category}
-            onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-            className="p-2 border rounded"
-            required
-          >
-            <option value="">Choisir un secteur</option>
-            <option value="immobilier">Immobilier</option>
-            <option value="electronique">Électronique</option>
-            <option value="mode">Mode</option>
-            <option value="services">Services</option>
-          </select>
+          </div>
+          {/* Description */}
+          <div className="mb-2">
+            <label className="block mb-1">Description</label>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full border p-2"
+              required
+            />
+          </div>
+          {/* Prix */}
+          <div className="mb-2">
+            <label className="block mb-1">Prix</label>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              className="w-full border p-2"
+              required
+            />
+          </div>
+          {/* Catégorie */}
+          <div className="mb-2">
+            <label className="block mb-1">Catégorie</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="p-2 border rounded"
+              required
+            >
+              <option value="">Choisir une catégorie</option>
+              <option value="immobilier">Immobilier</option>
+              <option value="electronique">Électronique</option>
+              <option value="mode">Mode</option>
+              <option value="services">Services</option>
+            </select>
+          </div>
+          {/* Stock */}
+          <div className="mb-2">
+            <label className="block mb-1">Stock</label>
+            <input
+              type="number"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              className="w-full border p-2"
+            />
+          </div>
+          {/* Image */}
+          <div className="mb-2">
+            <label className="block mb-1">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files ? e.target.files[0] : null)}
+              className="w-full"
+            />
+          </div>
+          {/* Bouton submit */}
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+            className="mt-2 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700"
           >
-            Publier le produit
-          </button>
-          <button
-            type="button"
-            onClick={onClose}
-            className="mt-2 bg-gray-300 text-gray-800 py-2 rounded hover:bg-gray-400"
-          >
-            Annuler
+            Publier
           </button>
         </form>
       </div>
     </div>
   );
-}
+};
+
+export default AddProductModal;

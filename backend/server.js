@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const productRoutes = require('./routes/productRoutes');
+const favoritesRoutes = require('./routes/favorites');
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -28,6 +29,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/favorites', favoritesRoutes)
 
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
