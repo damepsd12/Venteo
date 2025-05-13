@@ -67,30 +67,6 @@ export default function MyProductsPage() {
     fetchMyProducts();
   }, []);
 
-  // const handleDelete = async (id: string) => {
-  //   if (!confirm('Supprimer ce produit ?')) return;
-  //   const token = localStorage.getItem('token');
-  //   if (!token) {
-  //     alert('Veuillez vous reconnecter.');
-  //     return;
-  //   }
-  //   try {
-  //     const res = await fetch(`http://localhost:5000/api/products/${id}`, {
-  //       method: 'DELETE',
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     });
-  //     if (res.ok) {
-  //       setProducts(prev => prev.filter(p => p._id !== id));
-  //       alert('Produit supprimé avec succès !');
-  //     } else {
-  //       const errorText = await res.text();
-  //       alert(`Erreur suppression: ${(JSON.parse(errorText)).message || 'Une erreur est survenue.'}`);
-  //     }
-  //   } catch (err) {
-  //     console.error(err);
-  //     alert('Erreur lors de la suppression.');
-  //   }
-  // };
 const handleDelete = async (id: string) => {
   if (!confirm('Supprimer ce produit ?')) return;
 

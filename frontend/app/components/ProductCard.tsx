@@ -6,6 +6,7 @@ interface Product {
   description: string;
   price: number;
   image: string;
+  category?: string;
   status?: string;
 }
 
@@ -18,7 +19,7 @@ interface Props {
 
 export default function ProductCard({ product, addToCart, toggleFavori, isFavori }: Props) {
   return (
-    <div className="border rounded-xl shadow p-4 hover:shadow-lg transition relative">
+    <div className="bg-white rounded-xl shadow p-4 hover:shadow-lg transition relative min-w-[200px] max-w-[250px]">
       <img
         src={product.image}
         alt={product.title}
@@ -26,7 +27,6 @@ export default function ProductCard({ product, addToCart, toggleFavori, isFavori
       />
       <h2 className="text-lg font-semibold mb-2">{product.title}</h2>
       
-      {/* Assure-toi que la description est visible */}
       <p className="text-gray-700 text-sm mb-2">{product.description}</p>
       
       <p className="mt-2 font-bold text-blue-600">{product.price.toLocaleString()} F CFA</p>
@@ -44,11 +44,11 @@ export default function ProductCard({ product, addToCart, toggleFavori, isFavori
 
         {/* Favori */}
         <button
-        onClick={() => toggleFavori(product._id)}
-        className="flex items-center space-x-2 text-red-500 hover:text-red-700"
-      >
-        {isFavori ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
-      </button>
+          onClick={() => toggleFavori(product._id)}
+          className="flex items-center space-x-2 text-red-500 hover:text-red-700"
+        >
+          {isFavori ? <FaHeart className="w-4 h-4" /> : <FaRegHeart className="w-4 h-4" />}
+        </button>
       </div>
     </div>
   );

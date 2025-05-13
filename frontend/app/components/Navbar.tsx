@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ShoppingCart } from 'lucide-react';
 import { FaRegHeart } from 'react-icons/fa';
+import Image from 'next/image';
 
 interface NavbarProps {
   cartCount: number;
@@ -48,7 +49,7 @@ export default function Navbar({ cartCount, favorisCount, onSearch }: NavbarProp
   };
 
   return (
-    <nav className="bg-white fixed top-0 left-0 w-full z-10 shadow px-6 py-4 flex justify-between items-center">
+    <nav className="bg-white fixed top-0 left-0 w-full z-10 shadow-md px-6 py-3 flex justify-between items-center">
       {/* Logo */}
       <Link href="/" className="text-xl font-bold text-green-600">
         <span>Venteo</span>

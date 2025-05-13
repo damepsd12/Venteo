@@ -57,7 +57,7 @@ export default function SellerSidebar() {
         ))}
       </nav>
 
-      <div className="mt-auto p-4 pt-30">
+      <div className="mt-auto p-4 pt-60">
         <button 
           onClick={handleLogout}
           className="flex items-center space-x-2 p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-all duration-200"
